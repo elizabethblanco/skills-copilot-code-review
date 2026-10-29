@@ -91,9 +91,8 @@ def create_announcement(
 ) -> Dict[str, Any]:
     """Create an announcement for authenticated teachers."""
     announcement = validate_announcement(data)
-    result = announcements_collection.insert_one(announcement)
-    announcement["id"] = str(result.inserted_id)
-    return announcement
+    announcements_collection.insert_one(announcement)
+    return serialize_announcement(announcement)
 
 
 @router.put("/manage/{announcement_id}")
