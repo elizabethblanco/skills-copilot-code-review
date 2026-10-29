@@ -699,6 +699,11 @@ footer {
   font-size: 1.05rem;
 }
 
+.announcement-copy {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .announcement-copy h2 {
   margin: 0 0 3px;
   font-size: 0.98rem;
