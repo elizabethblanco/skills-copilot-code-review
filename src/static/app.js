@@ -535,7 +535,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       );
       const result = await response.json();
-      if (!response.ok) throw new Error(result.detail || "Unable to save announcement.");
+      if (!response.ok) {
+        const detail = Array.isArray(result.detail)
+          ? result.detail.map((error) => `${error.loc.join(".")}: ${error.msg}`).join("; ")
+          : result.detail;
+        throw new Error(detail || "Unable to save announcement.");
+      }
       resetAnnouncementForm();
       await Promise.all([loadAnnouncementManager(), fetchAnnouncements()]);
       showAnnouncementManagerMessage(
