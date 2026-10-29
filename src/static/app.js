@@ -461,6 +461,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeAnnouncementsModal() {
     announcementsModal.classList.remove("show");
     setTimeout(() => announcementsModal.classList.add("hidden"), 300);
+    manageAnnouncementsButton.focus();
   }
 
   async function deleteAnnouncement(announcement) {
@@ -497,6 +498,27 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !announcementsModal.classList.contains("hidden")) {
       closeAnnouncementsModal();
+      return;
+    }
+    if (event.key !== "Tab" || announcementsModal.classList.contains("hidden")) return;
+
+    const focusableElements = Array.from(
+      announcementsModal.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((element) => element.getClientRects().length > 0);
+    const firstFocusableElement = focusableElements[0];
+    const lastFocusableElement = focusableElements[focusableElements.length - 1];
+
+    if (
+      !announcementsModal.contains(document.activeElement) ||
+      (event.shiftKey && document.activeElement === firstFocusableElement)
+    ) {
+      event.preventDefault();
+      (event.shiftKey ? lastFocusableElement : firstFocusableElement).focus();
+    } else if (document.activeElement === lastFocusableElement) {
+      event.preventDefault();
+      firstFocusableElement.focus();
     }
   });
 
